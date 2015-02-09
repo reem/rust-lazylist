@@ -33,19 +33,24 @@ use List::{Nil, Cons};
 /// A Node in a lazy, reference counted, singly linked list.
 #[derive(Clone)]
 pub enum List<T: 'static> {
+    /// The Empty List
     Nil,
+    /// A list with one member and possibly another list.
     Cons(T, RcList<T>)
 }
 
 impl<T: 'static> List<T> {
+    /// Create a new RcList
     pub fn new() -> RcList<T> {
         nil!()
     }
 
+    /// Create an RcList with a single member.
     pub fn singleton(val: T) -> RcList<T> {
         pair!(val, nil!())
     }
 
+    /// Get the first element in an RcList, if there is one.
     pub fn head(&self) -> Option<&T> {
         match *self {
             Cons(ref val, _) => Some(val),
@@ -53,6 +58,7 @@ impl<T: 'static> List<T> {
         }
     }
 
+    /// Get the tail of the RcList, if there is one.
     pub fn tail(&self) -> Option<RcList<T>> {
         match *self {
             Cons(_, ref tail) => Some(tail.clone()),
@@ -61,23 +67,32 @@ impl<T: 'static> List<T> {
     }
 }
 
+/// A trait providing RcList methods on Rc<Thunk<List<T>>>
 pub trait RcListMethods<T> {
+    /// Add a value to the RcList (in the front)
     fn push(self, val: T) -> RcList<T>;
+
+    /// Remove a value from the RcList (at the front)
     fn pop(&self) -> Option<(&T, RcList<T>)>;
+
+    /// Get the length of the RcList (O(n))
     fn len(&self) -> usize;
 }
 
 impl<T: 'static> RcListMethods<T> for RcList<T> {
+    /// Add a value to the RcList (in the front)
     fn push(self, val: T) -> RcList<T> {
         pair!(val, self)
     }
 
+    /// Remove a value from the RcList (at the front)
     fn pop(&self) -> Option<(&T, RcList<T>)> {
         self.tail().and_then(|next| self.head().map(|head| {
             (head, next)
         }))
     }
 
+    /// Get the length of the RcList (O(n))
     fn len(&self) -> usize {
         self.count()
     }
