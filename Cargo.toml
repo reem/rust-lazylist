@@ -1,0 +1,13 @@
+[package]
+
+name = "lazylist"
+version = "0.0.1"
+authors = ["Jonathan Reem <jonathan.reem@gmail.com>"]
+repository = "https://github.com/reem/rust-lazylist.git"
+description = "A lazy, reference counted linked list similar to Haskell's []."
+readme = "README.md"
+license = "MIT"
+
+[dependencies]
+lazy = "*"
+
